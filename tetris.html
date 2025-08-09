@@ -95,25 +95,37 @@
         .next-piece-cell::before {
             content: '';
             position: absolute;
-            top: 10px;
-            bottom: 10px;
+            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
-            border-left: 1px solid #111;
-            border-right: 1px solid #111;
+            border-left: 1px solid #444;
+            border-right: 1px solid #444;
             pointer-events: none;
         }
         
         .next-piece-cell::after {
             content: '';
             position: absolute;
-            left: 10px;
-            right: 10px;
+            left: 0;
+            right: 0;
             top: 0;
             bottom: 0;
-            border-top: 1px solid #111;
-            border-bottom: 1px solid #111;
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
             pointer-events: none;
+        }
+        
+        /* 预览区域填充方块的格子线 - 只在有颜色的方块上显示 */
+        .next-piece-cell.filled::before,
+        .next-piece-cell.filled::after {
+            display: block;
+        }
+        
+        /* 预览区域默认情况下隐藏格子线 */
+        .next-piece-cell:not(.filled)::before,
+        .next-piece-cell:not(.filled)::after {
+            display: none;
         }
         
         /* 得分和等级区域样式 */
@@ -149,25 +161,37 @@
         .cell::before {
             content: '';
             position: absolute;
-            top: 10px;
-            bottom: 10px;
+            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
-            border-left: 1px solid #111;
-            border-right: 1px solid #111;
+            border-left: 1px solid #444;
+            border-right: 1px solid #444;
             pointer-events: none;
         }
         
         .cell::after {
             content: '';
             position: absolute;
-            left: 10px;
-            right: 10px;
+            left: 0;
+            right: 0;
             top: 0;
             bottom: 0;
-            border-top: 1px solid #111;
-            border-bottom: 1px solid #111;
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
             pointer-events: none;
+        }
+        
+        /* 填充方块的格子线 - 只在有颜色的方块上显示 */
+        .cell.filled::before,
+        .cell.filled::after {
+            display: block;
+        }
+        
+        /* 默认情况下隐藏格子线 */
+        .cell:not(.filled)::before,
+        .cell:not(.filled)::after {
+            display: none;
         }
         
         /* 按钮样式 */
@@ -382,6 +406,7 @@
                         if (newY >= 0 && newY < NEXT_PIECE_SIZE && newX >= 0 && newX < NEXT_PIECE_SIZE) {
                             const index = newY * NEXT_PIECE_SIZE + newX;
                             cells[index].style.backgroundColor = nextPiece.color;
+                            cells[index].classList.add('filled'); // 添加filled类以显示格子线
                         }
                     }
                 });
@@ -401,7 +426,10 @@
         function draw() {
             // 清空画布
             const cells = document.querySelectorAll('#game-board .cell');
-            cells.forEach(cell => cell.style.backgroundColor = '#000');
+            cells.forEach(cell => {
+                cell.style.backgroundColor = '#000';
+                cell.classList.remove('filled'); // 移除filled类
+            });
             
             // 绘制固定方块
             for (let y = 0; y < ROWS; y++) {
@@ -409,6 +437,7 @@
                     if (board[y][x]) {
                         const index = y * COLS + x;
                         cells[index].style.backgroundColor = board[y][x];
+                        cells[index].classList.add('filled'); // 添加filled类
                     }
                 }
             }
@@ -423,6 +452,7 @@
                             if (newY >= 0 && newY < ROWS && newX >= 0 && newX < COLS) {
                                 const index = newY * COLS + newX;
                                 cells[index].style.backgroundColor = currentPiece.color;
+                                cells[index].classList.add('filled'); // 添加filled类
                             }
                         }
                     });
